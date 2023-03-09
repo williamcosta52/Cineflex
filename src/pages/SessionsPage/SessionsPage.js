@@ -1,34 +1,49 @@
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom";
 import styled from "styled-components"
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function SessionsPage() {
+
+    const [session, setSession] = useState([]);
+
+    const { idMovie } = useParams();
+
+
+    useEffect(() => {
+
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idMovie}/showtimes`;
+
+        const promise = axios.get(url);
+
+        promise.then((resp) => {
+            setSession(resp.data.days);
+        })
+        promise.catch(() => {
+            console.log("bad requisition");
+        })
+
+        
+
+    }, [idMovie]);
 
     return (
         <PageContainer>
             Selecione o horário
             <div>
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+                {session.map(( dayMovie ,index) => (
+                    <SessionContainer key={index}>
+                        {session[index].weekday} - {session[index].date}
+                            {session[index].showtimes.map((time, i) => (
+                                <ButtonsContainer key={i}>
+                                    <button>{time[index]}</button>
+                                </ButtonsContainer>
+                            ))}
+                        
+                    </SessionContainer>
+                ))}
+                    
             </div>
 
             <FooterContainer>

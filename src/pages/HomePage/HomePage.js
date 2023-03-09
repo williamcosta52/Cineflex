@@ -1,10 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components"
 
 export default function HomePage() {
 
     const [movieList, setMovieList] = useState([]);
+
+    const { idMovie } = useParams();
+
+    console.log(idMovie);
 
 
     useEffect(() => {
@@ -26,15 +31,17 @@ export default function HomePage() {
         <PageContainer>
             Selecione o filme
             <ListContainer>
-                {movieList.length > 0 ? (
-                    movieList.map((poster, index) => (
-                        <MovieContainer key={index}>
-                            <img src={movieList[index].posterURL} alt="poster"/>
-                        </MovieContainer>
-                    ))
-                ) : (
-                    <div>Carregando...</div>
-                )}
+                    {movieList.length > 0 ? (
+                        movieList.map((poster, index) => (
+                            <Link to={{ pathname: `/sessions/${movieList[index].id}`, movieId: movieList }} key={index}>
+                                <MovieContainer >
+                                    <img src={movieList[index].posterURL} alt="poster"/>
+                                </MovieContainer>
+                            </Link>
+                        ))
+                    ) : (
+                        <div>Carregando...</div>
+                    )}
             </ListContainer>
         </PageContainer>
     )

@@ -1,6 +1,26 @@
 import styled from "styled-components"
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function SeatsPage() {
+export default function SeatsPage({ movieId }) {
+
+    useEffect(() => {
+
+        // const { movieId } = props.location;
+
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/ID_DO_FILME/seats`;
+        const promise = axios.get(url);
+
+
+        promise.then((resp) => {
+            console.log(resp);
+        })
+        promise.catch((err) => {
+            console.log(err);
+        })
+
+    }, [])
+
 
     return (
         <PageContainer>
