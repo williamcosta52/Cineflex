@@ -9,8 +9,6 @@ export default function HomePage() {
 
     const { idMovie } = useParams();
 
-    console.log(idMovie);
-
 
     useEffect(() => {
 

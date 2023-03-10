@@ -1,19 +1,23 @@
 import styled from "styled-components"
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export default function SeatsPage({ movieId }) {
+export default function SeatsPage() {
+
+    const [movieID, setMovieID] = useState([]);
+
+    const { idSeats } = useParams();
 
     useEffect(() => {
 
-        // const { movieId } = props.location;
-
-        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/ID_DO_FILME/seats`;
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/1/seats`;
         const promise = axios.get(url);
 
 
         promise.then((resp) => {
-            console.log(resp);
+            console.log(resp.data);
+            setMovieID(resp.data.id);
         })
         promise.catch((err) => {
             console.log(err);

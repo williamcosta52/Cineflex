@@ -8,8 +8,11 @@ export default function SessionsPage() {
 
     const [session, setSession] = useState([]);
 
+    const [movieTitle, setMovieTitle] = useState([]);
+
     const { idMovie } = useParams();
 
+    console.log(movieTitle)
 
     useEffect(() => {
 
@@ -19,6 +22,7 @@ export default function SessionsPage() {
 
         promise.then((resp) => {
             setSession(resp.data.days);
+            setMovieTitle(resp.data);
         })
         promise.catch(() => {
             console.log("bad requisition");
@@ -36,9 +40,11 @@ export default function SessionsPage() {
                     <SessionContainer key={index}>
                         {session[index].weekday} - {session[index].date}
                             {session[index].showtimes.map((time, i) => (
-                                <ButtonsContainer key={i}>
-                                    <button>{time[index]}</button>
-                                </ButtonsContainer>
+                                <Link key={i} to={`/seats/${idMovie}`}>
+                                    <ButtonsContainer >
+                                        <button>{session[index].showtimes[i].name}</button>
+                                    </ButtonsContainer>
+                                </Link>
                             ))}
                         
                     </SessionContainer>
@@ -48,10 +54,10 @@ export default function SessionsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={movieTitle.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
+                    <p>{movieTitle.title}</p>
                 </div>
             </FooterContainer>
 
@@ -81,16 +87,24 @@ const SessionContainer = styled.div`
     font-size: 20px;
     color: #293845;
     padding: 0 20px;
+    a {
+        text-decoration: none;
+    }
 `
 const ButtonsContainer = styled.div`
     display: flex;
     flex-direction: row;
     margin: 20px 0;
+    div {
+        width: 150px;
+        white-space: nowrap;
+    }
     button {
         margin-right: 20px;
     }
     a {
         text-decoration: none;
+        display: inline-block;
     }
 `
 const FooterContainer = styled.div`
