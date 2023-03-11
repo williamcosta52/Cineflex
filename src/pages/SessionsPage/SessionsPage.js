@@ -10,13 +10,11 @@ export default function SessionsPage() {
 
     const [movieTitle, setMovieTitle] = useState([]);
 
-    const { idMovie } = useParams();
-
-    console.log(movieTitle)
+    const { idSession } = useParams();
 
     useEffect(() => {
 
-        const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idMovie}/showtimes`;
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idSession}/showtimes`;
 
         const promise = axios.get(url);
 
@@ -27,10 +25,7 @@ export default function SessionsPage() {
         promise.catch(() => {
             console.log("bad requisition");
         })
-
-        
-
-    }, [idMovie]);
+    }, [idSession]);
 
     return (
         <PageContainer>
@@ -39,19 +34,16 @@ export default function SessionsPage() {
                 {session.map(( dayMovie ,index) => (
                     <SessionContainer key={index}>
                         {session[index].weekday} - {session[index].date}
-                            {session[index].showtimes.map((time, i) => (
-                                <Link key={i} to={`/seats/${idMovie}`}>
-                                    <ButtonsContainer >
-                                        <button>{session[index].showtimes[i].name}</button>
-                                    </ButtonsContainer>
+                        <ButtonsContainer>
+                            {session[index].showtimes.map((showtime, index) => (
+                                <Link key={index} to={`/seats/${showtime.id}`}>
+                                    <button>{showtime.name}</button>
                                 </Link>
                             ))}
-                        
+                            </ButtonsContainer>
                     </SessionContainer>
                 ))}
-                    
             </div>
-
             <FooterContainer>
                 <div>
                     <img src={movieTitle.posterURL} alt="poster" />
@@ -95,16 +87,8 @@ const ButtonsContainer = styled.div`
     display: flex;
     flex-direction: row;
     margin: 20px 0;
-    div {
-        width: 150px;
-        white-space: nowrap;
-    }
     button {
         margin-right: 20px;
-    }
-    a {
-        text-decoration: none;
-        display: inline-block;
     }
 `
 const FooterContainer = styled.div`

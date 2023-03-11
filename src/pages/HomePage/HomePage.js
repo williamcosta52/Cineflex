@@ -16,7 +16,6 @@ export default function HomePage() {
         const promise = axios.get(url);
 
         promise.then((resp) => {
-            console.log(resp.data);
             setMovieList(resp.data);
         })
         promise.catch((err) => {

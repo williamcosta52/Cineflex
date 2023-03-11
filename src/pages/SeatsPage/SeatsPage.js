@@ -7,23 +7,38 @@ export default function SeatsPage() {
 
     const [movieID, setMovieID] = useState([]);
 
-    const { idSeats } = useParams();
+    const [cardMovie, setCardMovie] = useState([]);
+
+    const [movieInfo, setMovieInfo] = useState([]);
+
+    const [movieDay, setMovieDay] = useState([]);
+
+    const { idMovie } = useParams();
+
+    const { idSession } = useParams();
 
     useEffect(() => {
 
-        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/1/seats`;
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idMovie}/seats`;
         const promise = axios.get(url);
 
 
         promise.then((resp) => {
-            console.log(resp.data);
-            setMovieID(resp.data.id);
+            setMovieID(resp.data.seats);
+
+            setCardMovie(resp.data.movie)
+
+            setMovieInfo(resp.data);
+
+            setMovieDay(resp.data.day.weekday);
+
+
         })
         promise.catch((err) => {
             console.log(err);
         })
 
-    }, [])
+    }, [idSession])
 
 
     return (
@@ -31,13 +46,11 @@ export default function SeatsPage() {
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {movieID.map((seat, index) => (
+                    <SeatItem key={index}>{seat.name}</SeatItem>
+                ))}
+                
             </SeatsContainer>
-
             <CaptionContainer>
                 <CaptionItem>
                     <CaptionCircle />
@@ -65,11 +78,11 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={cardMovie.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
+                    <p>{cardMovie.title}</p>
+                    <p>{movieDay} - {movieInfo.name}</p>
                 </div>
             </FooterContainer>
 
