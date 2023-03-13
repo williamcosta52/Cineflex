@@ -8,6 +8,7 @@ export default function SeatItem( { seat, seatSelected, select, setSeatSelected,
 
     return (
         <Seat
+        data-test="seat"
         onClick={() => {
             if (seat.isAvailable){
                 if (!seatSelected.includes(seat)){

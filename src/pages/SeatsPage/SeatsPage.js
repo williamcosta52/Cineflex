@@ -69,7 +69,6 @@ export default function SeatsPage( { setInfoSucess, setInfoSeats, setPeopleInfo,
                     index={index}
                     key={index}
                     cardMovie={cardMovie}
-                    data-test="seat"
                     />
                 ))}
             </SeatsContainer>
