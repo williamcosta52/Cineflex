@@ -30,7 +30,7 @@ export default function HomePage() {
             <ListContainer>
                     {movieList.length > 0 ? (
                         movieList.map((poster, index) => (
-                            <Link to={{ pathname: `/sessions/${movieList[index].id}`, movieId: movieList }} key={index}>
+                            <Link to={{ pathname: `/sessoes/${movieList[index].id}`, movieId: movieList }} key={index}>
                                 <MovieContainer data-test="movie">
                                     <img src={movieList[index].posterURL} alt="poster"/>
                                 </MovieContainer>

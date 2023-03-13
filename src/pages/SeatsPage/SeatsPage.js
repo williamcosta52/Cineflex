@@ -52,7 +52,7 @@ export default function SeatsPage( { setInfoSucess, setInfoSeats, setPeopleInfo,
         }
         const url = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many";
         const promise = axios.post(url, infos);
-        promise.then(() => navigate("/sucess", {state:{cpf: cpf, name: name}}));
+        promise.then(() => navigate("/sucesso", {state:{cpf: cpf, name: name}}));
         promise.catch((err) => alert(err.data.response.message));
         id = [];
     }
