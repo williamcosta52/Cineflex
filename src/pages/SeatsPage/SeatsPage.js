@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import SeatItem from "../../components/SeatItem";
 
-export default function SeatsPage( { setInfoSucess } ) {
+export default function SeatsPage( { setInfoSucess, setInfoSeats, setPeopleInfo, setPeopleCPF } ) {
 
     const [movieID, setMovieID] = useState([]);
     const [cardMovie, setCardMovie] = useState([]);
@@ -15,13 +15,14 @@ export default function SeatsPage( { setInfoSucess } ) {
     const [unselected, setUnselected] = useState("#FBE192");
     const [available, setAvailable] = useState("#C3CFD9");
     const [seatSelected, setSeatSelected] = useState([]);
-    const [changeColor, setChangeColor] = useState(false);
     const [cpf, setCPF] = useState("");
     const [name, setName] = useState("");
     let id = [];
     const { idMovie } = useParams();
     const { idSession } = useParams();
     const navigate = useNavigate();
+    setInfoSucess(movieInfo);
+    setInfoSeats(seatSelected);
 
     useEffect(() => {
 
@@ -32,7 +33,6 @@ export default function SeatsPage( { setInfoSucess } ) {
             setCardMovie(resp.data.movie)
             setMovieInfo(resp.data);
             setMovieDay(resp.data.day.weekday);
-            setInfoSucess(movieInfo);
         })
         promise.catch((err) => {
             console.log(err);
@@ -50,11 +50,9 @@ export default function SeatsPage( { setInfoSucess } ) {
             name: name,
             cpf: cpf
         }
-
         const url = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many";
         const promise = axios.post(url, infos);
-
-        promise.then((resp) => navigate("/sucess"));
+        promise.then(() => navigate("/sucess", {state:{cpf: cpf, name: name}}));
         promise.catch((err) => alert(err.data.response.message));
         id = [];
     }
@@ -71,6 +69,7 @@ export default function SeatsPage( { setInfoSucess } ) {
                     index={index}
                     key={index}
                     cardMovie={cardMovie}
+                    data-test="seat"
                     />
                 ))}
             </SeatsContainer>
@@ -92,6 +91,7 @@ export default function SeatsPage( { setInfoSucess } ) {
                 <form onSubmit={confirm}>
                     Nome do Comprador:
                     <input
+                    data-test="client-name"
                     placeholder="Digite seu nome..." 
                     value={name}
                     onChange={e => setName(e.target.value)}
@@ -99,16 +99,17 @@ export default function SeatsPage( { setInfoSucess } ) {
                     />
                     CPF do Comprador:
                     <input 
+                    data-test="client-cpf"
                     placeholder="Digite seu CPF..." 
                     type="number"
                     value={cpf}
                     onChange={e => setCPF(e.target.value)}
                     required
                     />
-                    <button type="submit">Reservar Assento(s)</button>
+                    <button data-test="book-seat-btn" type="submit">Reservar Assento(s)</button>
                 </form>
             </FormContainer>
-            <FooterContainer>
+            <FooterContainer data-test="footer">
                 <div>
                     <img src={cardMovie.posterURL} alt="poster" />
                 </div>

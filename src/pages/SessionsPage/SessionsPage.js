@@ -12,8 +12,6 @@ export default function SessionsPage() {
 
     const { idSession } = useParams();
 
-    console.log(movieTitle);
-    
     useEffect(() => {
 
         const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idSession}/showtimes`;
@@ -34,19 +32,19 @@ export default function SessionsPage() {
             Selecione o horário
             <div>
                 {session.map(( dayMovie ,index) => (
-                    <SessionContainer key={index}>
+                    <SessionContainer data-test="movie-day" key={index}>
                         {session[index].weekday} - {session[index].date}
                         <ButtonsContainer>
                             {session[index].showtimes.map((showtime, index) => (
                                 <Link key={index} to={`/seats/${showtime.id}`}>
-                                    <button>{showtime.name}</button>
+                                    <button data-test="showtime">{showtime.name}</button>
                                 </Link>
                             ))}
                             </ButtonsContainer>
                     </SessionContainer>
                 ))}
             </div>
-            <FooterContainer>
+            <FooterContainer data-test="footer">
                 <div>
                     <img src={movieTitle.posterURL} alt="poster" />
                 </div>
