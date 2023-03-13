@@ -10,14 +10,17 @@ export default function App() {
 
     const [id, setID] = useState("");
     const [secondID, setSecondID] = useState("");
+    const [infoSucess, setInfoSucess] = useState([]);
+
+    console.log(infoSucess);
 
     return (
         <><NavContainer>CINEFLEX</NavContainer><BrowserRouter>
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/seats/:idMovie" element={<SeatsPage id={id} secondID={secondID} />} />
+                <Route path="/seats/:idMovie" element={<SeatsPage id={id} secondID={secondID} setInfoSucess={setInfoSucess}/>} />
                 <Route path="/sessions/:idSession" element={<SessionsPage setID={setID} setSecondID={setSecondID} />} />
-                <Route path="/sucess" element={<SuccessPage />} />
+                <Route path="/sucess" element={<SuccessPage infoSucess={infoSucess} />} />
             </Routes>
         </BrowserRouter></>
     )

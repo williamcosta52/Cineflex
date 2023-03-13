@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export default function SuccessPage() {
+export default function SuccessPage({ infoSucess }) {
 
     return (
         <PageContainer>
@@ -8,7 +8,7 @@ export default function SuccessPage() {
 
             <TextContainer>
                 <strong><p>Filme e sessão</p></strong>
-                <p>Tudo em todo lugar ao mesmo tempo</p>
+                <p>{infoSucess.title}</p>
                 <p>03/03/2023 - 14:00</p>
             </TextContainer>
 

@@ -1,81 +1,113 @@
-import styled from "styled-components"
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SeatItem from "../../components/SeatItem";
 
-export default function SeatsPage() {
+export default function SeatsPage( { setInfoSucess } ) {
 
     const [movieID, setMovieID] = useState([]);
-
     const [cardMovie, setCardMovie] = useState([]);
-
     const [movieInfo, setMovieInfo] = useState([]);
-
     const [movieDay, setMovieDay] = useState([]);
-
+    const [select, setSelect] = useState("#1AAE9E");
+    const [unselected, setUnselected] = useState("#FBE192");
+    const [available, setAvailable] = useState("#C3CFD9");
+    const [seatSelected, setSeatSelected] = useState([]);
+    const [changeColor, setChangeColor] = useState(false);
+    const [cpf, setCPF] = useState("");
+    const [name, setName] = useState("");
+    let id = [];
     const { idMovie } = useParams();
-
     const { idSession } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
         const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idMovie}/seats`;
         const promise = axios.get(url);
-
-
         promise.then((resp) => {
             setMovieID(resp.data.seats);
-
             setCardMovie(resp.data.movie)
-
             setMovieInfo(resp.data);
-
             setMovieDay(resp.data.day.weekday);
-
-
+            setInfoSucess(movieInfo);
         })
         promise.catch((err) => {
             console.log(err);
         })
-
     }, [idSession])
 
+    function confirm(e){
+        e.preventDefault();
 
+        for (let i = 0; i < seatSelected.length; i++){
+            id.push(seatSelected[i].id);
+        }
+        const infos = {
+            ids: id,
+            name: name,
+            cpf: cpf
+        }
+
+        const url = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many";
+        const promise = axios.post(url, infos);
+
+        promise.then((resp) => navigate("/sucess"));
+        promise.catch((err) => alert(err.data.response.message));
+        id = [];
+    }
     return (
         <PageContainer>
             Selecione o(s) assento(s)
-
             <SeatsContainer>
                 {movieID.map((seat, index) => (
-                    <SeatItem key={index}>{seat.name}</SeatItem>
+                    <SeatItem 
+                    seat={seat}
+                    seatSelected={seatSelected}
+                    setSeatSelected={setSeatSelected}
+                    select={select}
+                    index={index}
+                    key={index}
+                    cardMovie={cardMovie}
+                    />
                 ))}
-                
             </SeatsContainer>
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle select={select} />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle available={available} />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle unselected={unselected} />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
-
             <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
-
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
-
-                <button>Reservar Assento(s)</button>
+                <form onSubmit={confirm}>
+                    Nome do Comprador:
+                    <input
+                    placeholder="Digite seu nome..." 
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                    />
+                    CPF do Comprador:
+                    <input 
+                    placeholder="Digite seu CPF..." 
+                    type="number"
+                    value={cpf}
+                    onChange={e => setCPF(e.target.value)}
+                    required
+                    />
+                    <button type="submit">Reservar Assento(s)</button>
+                </form>
             </FormContainer>
-
             <FooterContainer>
                 <div>
                     <img src={cardMovie.posterURL} alt="poster" />
@@ -85,11 +117,9 @@ export default function SeatsPage() {
                     <p>{movieDay} - {movieInfo.name}</p>
                 </div>
             </FooterContainer>
-
         </PageContainer>
     )
 }
-
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -133,8 +163,8 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${props => props.select === "#1AAE9E" && "#0E7D71" || props.unselected === "#FBE192" && "#F7C52B" || props.available === "#C3CFD9" && "#7B8B99"};
+    background-color: ${props => props.select} ${props => props.unselected} ${props => props.available};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -148,19 +178,6 @@ const CaptionItem = styled.div`
     flex-direction: column;
     align-items: center;
     font-size: 12px;
-`
-const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
-    height: 25px;
-    width: 25px;
-    border-radius: 25px;
-    font-family: 'Roboto';
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 3px;
 `
 const FooterContainer = styled.div`
     width: 100%;
@@ -187,7 +204,6 @@ const FooterContainer = styled.div`
             padding: 8px;
         }
     }
-
     div:nth-child(2) {
         display: flex;
         flex-direction: column;

@@ -12,6 +12,8 @@ export default function SessionsPage() {
 
     const { idSession } = useParams();
 
+    console.log(movieTitle);
+    
     useEffect(() => {
 
         const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idSession}/showtimes`;
